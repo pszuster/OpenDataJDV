@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<vdb name="pruebadsVDB" version="1">
+
+<property name="dsbOwner" value="teiidUser"/>
+<property name="dsbTeiidStatus" value="Active"/>
+<property name="dsbTeiidStatusMessage" value="The VDB is Active"/>
+
+<model name="views" type="VIRTUAL">
+<metadata type="DDL">
+<![CDATA[CREATE VIEW pruebadsView (
+	RowId integer,
+	ID_WORKSPACE string,
+	ID_PANEL_PROVIDER string,
+	DBID long,
+	DS_TYPE string,
+	NAME string,
+	JNDI_PATH string,
+	DS_URL string,
+	JDBC_DRIVER_CLASS string,
+	USER_NAME string,
+	PASSWD string,
+	TEST_QUERY string,
+	PRIMARY KEY(RowId)
+)
+AS
+SELECT ROW_NUMBER() OVER (ORDER BY A.ID_WORKSPACE), A.ID_WORKSPACE, A.ID_PANEL_PROVIDER, B.DBID, B.DS_TYPE, B.NAME, B.JNDI_PATH, B.DS_URL, B.JDBC_DRIVER_CLASS, B.USER_NAME, B.PASSWD, B.TEST_QUERY FROM prueba1.DASHB_ALLOWED_PANEL AS A INNER JOIN prueba1.DASHB_DATA_SOURCE AS B ON A.ID_WORKSPACE = B.DS_TYPE;
+]]>
+
+</metadata>
+</model>
+<model name="prueba1" type="PHYSICAL">
+<source name="DashboardDS" translator-name="h2" connection-jndi-name="java:jboss/datasources/DashboardDS"/>
+<metadata type="DDL">
+<![CDATA[CREATE FOREIGN TABLE DASHB_ALLOWED_PANEL (
+	ID_WORKSPACE string(40) NOT NULL OPTIONS ("NAMEINSOURCE" '"ID_WORKSPACE"', "NATIVE_TYPE" 'VARCHAR'),
+	ID_PANEL_PROVIDER string(2147483647) NOT NULL OPTIONS ("NAMEINSOURCE" '"ID_PANEL_PROVIDER"', "NATIVE_TYPE" 'VARCHAR')
+) OPTIONS ("UPDATABLE" 'TRUE', "NAMEINSOURCE" '"DASHB_ALLOWED_PANEL"');
+
+CREATE FOREIGN TABLE DASHB_DATA_SOURCE (
+	DBID long NOT NULL OPTIONS ("NAMEINSOURCE" '"DBID"', "NATIVE_TYPE" 'BIGINT'),
+	DS_TYPE string(512) OPTIONS ("NAMEINSOURCE" '"DS_TYPE"', "NATIVE_TYPE" 'VARCHAR'),
+	NAME string(512) OPTIONS ("NAMEINSOURCE" '"NAME"', "NATIVE_TYPE" 'VARCHAR'),
+	JNDI_PATH string(512) OPTIONS ("NAMEINSOURCE" '"JNDI_PATH"', "NATIVE_TYPE" 'VARCHAR'),
+	DS_URL string(512) OPTIONS ("NAMEINSOURCE" '"DS_URL"', "NATIVE_TYPE" 'VARCHAR'),
+	JDBC_DRIVER_CLASS string(512) OPTIONS ("NAMEINSOURCE" '"JDBC_DRIVER_CLASS"', "NATIVE_TYPE" 'VARCHAR'),
+	USER_NAME string(512) OPTIONS ("NAMEINSOURCE" '"USER_NAME"', "NATIVE_TYPE" 'VARCHAR'),
+	PASSWD string(512) OPTIONS ("NAMEINSOURCE" '"PASSWD"', "NATIVE_TYPE" 'VARCHAR'),
+	TEST_QUERY string(2000) OPTIONS ("NAMEINSOURCE" '"TEST_QUERY"', "NATIVE_TYPE" 'VARCHAR')
+) OPTIONS ("UPDATABLE" 'TRUE', "NAMEINSOURCE" '"DASHB_DATA_SOURCE"');
+]]>
+
+</metadata>
+</model>
+<data-role name="DefaultReadOnlyDataRole" any-authenticated="true" allow-create-temporary-tables="false" grant-all="false">
+<description>The default read-only access data role.</description>
+<permission>
+<resource-name>views</resource-name>
+<allow-alter>false</allow-alter>
+<allow-create>false</allow-create>
+<allow-delete>false</allow-delete>
+<allow-execute>false</allow-execute>
+<allow-read>true</allow-read>
+<allow-update>false</allow-update>
+</permission>
+<permission>
+<resource-name>prueba1</resource-name>
+<allow-alter>false</allow-alter>
+<allow-create>false</allow-create>
+<allow-delete>false</allow-delete>
+<allow-execute>false</allow-execute>
+<allow-read>true</allow-read>
+<allow-update>false</allow-update>
+</permission>
+</data-role>
+
+</vdb>
