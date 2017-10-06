@@ -1,4 +1,5 @@
-{[
+{
+  [
 {
   "customer_id": 1,
   "firstName": "Pablo",
@@ -14,5 +15,6 @@
   "firstName": "John",
   "lastName": "Doe"
 }
+ 
 ]
 }
