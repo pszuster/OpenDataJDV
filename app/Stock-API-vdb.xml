@@ -48,4 +48,16 @@ CREATE FOREIGN TABLE stock (
 
 ]]></metadata>
 </model>
+	<model name="Mongo">
+<source connection-jndi-name="java:/mongodb-DS" name="Mongo" translator-name="mongodb"/>
+<metadata type="DDL"><![CDATA[
+
+CREATE FOREIGN TABLE customers (
+	customer_id biginteger(4000),
+	firstName string(4000),
+	lastName string(4000)
+) OPTIONS(UPDATABLE 'TRUE');
+
+]]></metadata>
+</model>
 </vdb>
