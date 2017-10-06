@@ -1,19 +1,16 @@
-  [
 {
   "customer_id": 1,
   "firstName": "Pablo",
   "lastName": "Szuster"
-},
+}
 {
   "customer_id": 2,
   "firstName": "Jorge",
   "lastName": "Rodriguez"
-},
+}
 {
   "customer_id": 3,
   "firstName": "John",
   "lastName": "Doe"
 }
- 
-]
 
