@@ -539,6 +539,30 @@
                 <resource-adapter id="solr">
                     <module slot="main" id="org.jboss.teiid.resource-adapter.solr"/>
                 </resource-adapter>
+                <resource-adapter id="mongodb-ds">
+                    <module slot="main" id="org.jboss.teiid.resource-adapter.mongodb"/>
+                    <transaction-support>NoTransaction</transaction-support>
+                    <connection-definitions>
+                        <connection-definition class-name="org.teiid.resource.adapter.mongodb.MongoDBManagedConnectionFactory" jndi-name="java:/mongodb-DS" enabled="true" pool-name="mongodb-DS">
+                            <config-property name="Username">
+                                user1
+                            </config-property>
+                            <config-property name="RemoteServerList">
+                                mongodb.mongo.svc:27017
+                            </config-property>
+                            <config-property name="Password">
+                                Password
+                            </config-property>
+                            <config-property name="Database">
+                                sampledb
+                            </config-property>
+                            <validation>
+                                <background-validation>true</background-validation>
+                                <background-validation-millis>1000</background-validation-millis>
+                            </validation>
+                        </connection-definition>
+                    </connection-definitions>
+                </resource-adapter>
             </resource-adapters>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:sar:1.0"/>
