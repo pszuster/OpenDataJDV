@@ -548,7 +548,7 @@
                                 user1
                             </config-property>
                             <config-property name="RemoteServerList">
-                                mongodb.mongo.svc:27017
+                                mongodb.dbs.svc:27017
                             </config-property>
                             <config-property name="Password">
                                 Password
