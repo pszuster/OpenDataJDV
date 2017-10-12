@@ -6,9 +6,9 @@
     <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
         <dataFormats>
             <json allowJmsType="false"
-                collectionTypeName="org.mycompany.Reading"
                 enableJaxbAnnotationModule="false" id="reading"
-                library="Gson" prettyPrint="false" useList="false"/>
+                library="Gson" prettyPrint="false"
+                unmarshalTypeName="org.mycompany.Reading" useList="false"/>
         </dataFormats>
         <route id="sensorSimulator">
             <from id="route-timer" uri="timer:foo?period=2000"/>
