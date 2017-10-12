@@ -29,7 +29,7 @@ public class Reading {
 		this.setTemp(Double.parseDouble(String.format("%.2f",-20+(50+20)* random.nextDouble())));
 		this.setUvindex(Double.parseDouble(String.format("%.2f",0 + (15-0) * random.nextDouble())));
 		this.setWind(Double.parseDouble(String.format("%.2f",0 + (300-0)* random.nextDouble())));
-		this.setStation(1+ (50-1)*random.nextInt());
+		this.setStation(random.nextInt(50)+1);
 	}
 	public Reading(double temp, Timestamp date, int station, double wind, double pressure, double rain, double uvindex) {
 		super();
