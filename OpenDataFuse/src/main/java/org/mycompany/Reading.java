@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class Reading {
 	private double temp;
 	@Id
-	private Timestamp readingDate;
+	private Timestamp readingdate;
 	private int station;
 	private double wind;
 	private double pressure;
@@ -34,7 +34,7 @@ public class Reading {
 	public Reading(double temp, Timestamp date, int station, double wind, double pressure, double rain, double uvindex) {
 		super();
 		this.temp = temp;
-		this.readingDate = date;
+		this.readingdate = date;
 		this.station = station;
 		this.wind = wind;
 		this.pressure = pressure;
@@ -48,10 +48,10 @@ public class Reading {
 		this.temp = temp;
 	}
 	public Timestamp getDate() {
-		return readingDate;
+		return readingdate;
 	}
 	public void setDate(Timestamp instant) {
-		this.readingDate = instant;
+		this.readingdate = instant;
 	}
 	public int getStation() {
 		return station;
