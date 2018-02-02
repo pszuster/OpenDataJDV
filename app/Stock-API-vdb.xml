@@ -27,7 +27,7 @@ SELECT
 ]]></metadata>
 </model>
 <model name="StockMySQL" visible="false">
-<source connection-jndi-name="java:jboss/datasources/Stock_MySQL_DS" name="StockMySQL" translator-name="mysql5"/>
+<source connection-jndi-name="Stock_MySQL_DS" name="StockMySQL" translator-name="mysql5"/>
 <metadata type="DDL"><![CDATA[
 
 CREATE FOREIGN TABLE stock (
@@ -38,7 +38,7 @@ CREATE FOREIGN TABLE stock (
 ]]></metadata>
 </model>
 <model name="StockPG" visible="false">
-<source connection-jndi-name="java:jboss/datasources/StockPG_DS" name="StockPG" translator-name="postgresql"/>
+<source connection-jndi-name="StockPG_DS" name="StockPG" translator-name="postgresql"/>
 <metadata type="DDL"><![CDATA[
 
 CREATE FOREIGN TABLE stock (
