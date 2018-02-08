@@ -1,62 +1,108 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<vdb name="Stock-API" version="1">
+<vdb name="Prueba" version="1">
 <description/>
-<property name="validationDateTime" value="Fri Jun 23 10:39:05 ART 2017"/>
-<property name="validationVersion" value="9.0.0"/>
-<model name="FederatedStock" type="VIRTUAL">
-<property name="imports" value="StockPG"/>
+<property name="validationDateTime" value="Fri Feb 02 14:56:27 ART 2018"/>
+<property name="validationVersion" value="8.12.11"/>
+<model name="PostgreSQL_OCP">
+<source connection-jndi-name="java:/StockPG_DS" name="PostgreSQL_OCP" translator-name="postgresql"/>
 <metadata type="DDL"><![CDATA[
 
-CREATE VIEW stock (
-	productid integer OPTIONS(UPDATABLE 'FALSE', FIXED_LENGTH 'TRUE'),
-	amount double OPTIONS(UPDATABLE 'FALSE', FIXED_LENGTH 'TRUE'),
-	storeid integer OPTIONS(UPDATABLE 'FALSE'),
-	CONSTRAINT prodstore_PK PRIMARY KEY(productid, storeid)
-) 
-AS
-	SELECT
-		StockMySQL.stock.productid, StockMySQL.stock.amount, 1 AS storeid
-	FROM
-		StockMySQL.stock
-UNION ALL
-SELECT
-		StockPG.stock.productid, StockPG.stock.amount, 2 AS storeid
-	FROM
-		StockPG.stock;
+CREATE FOREIGN TABLE readings (
+	readingdate timestamp OPTIONS(NAMEINSOURCE '"readingdate"', NATIVE_TYPE 'timestamp', FIXED_LENGTH 'TRUE'),
+	temp double OPTIONS(NAMEINSOURCE '"temp"', NATIVE_TYPE 'float8', FIXED_LENGTH 'TRUE'),
+	station integer OPTIONS(NAMEINSOURCE '"station"', NATIVE_TYPE 'int4', FIXED_LENGTH 'TRUE'),
+	wind double OPTIONS(NAMEINSOURCE '"wind"', NATIVE_TYPE 'float8', FIXED_LENGTH 'TRUE'),
+	pressure double OPTIONS(NAMEINSOURCE '"pressure"', NATIVE_TYPE 'float8', FIXED_LENGTH 'TRUE'),
+	rain double OPTIONS(NAMEINSOURCE '"rain"', NATIVE_TYPE 'float8', FIXED_LENGTH 'TRUE'),
+	uvindex double OPTIONS(NAMEINSOURCE '"uvindex"', NATIVE_TYPE 'float8', FIXED_LENGTH 'TRUE'),
+	CONSTRAINT NewPrimaryKey PRIMARY KEY(readingdate)
+) OPTIONS(NAMEINSOURCE '"public"."readings"', UPDATABLE 'TRUE');
 
 ]]></metadata>
 </model>
-<model name="StockMySQL" visible="false">
-<source connection-jndi-name="Stock_MySQL_DS" name="StockMySQL" translator-name="mysql5"/>
+<model name="MySQL_OCP">
+<source connection-jndi-name="java:/Stock_MySQL_DS" name="MySQL_OCP" translator-name="mysql5"/>
 <metadata type="DDL"><![CDATA[
 
-CREATE FOREIGN TABLE stock (
-	productid integer OPTIONS(NAMEINSOURCE '`productid`', NATIVE_TYPE 'INT', FIXED_LENGTH 'TRUE'),
-	amount double OPTIONS(NAMEINSOURCE '`amount`', NATIVE_TYPE 'DOUBLE', FIXED_LENGTH 'TRUE')
-) OPTIONS(NAMEINSOURCE '`RHMart`.`stock`', UPDATABLE 'TRUE');
+CREATE FOREIGN TABLE vehicles_flow (
+	period integer OPTIONS(NAMEINSOURCE '`period`', NATIVE_TYPE 'INT', FIXED_LENGTH 'TRUE'),
+	"date" string(10) OPTIONS(NAMEINSOURCE '`date`', NATIVE_TYPE 'VARCHAR'),
+	"day" string(15) OPTIONS(NAMEINSOURCE '`day`', NATIVE_TYPE 'VARCHAR'),
+	"hour" string(8) OPTIONS(NAMEINSOURCE '`hour`', NATIVE_TYPE 'VARCHAR'),
+	hourend string(8) OPTIONS(NAMEINSOURCE '`hourend`', NATIVE_TYPE 'VARCHAR'),
+	station string(3) OPTIONS(NAMEINSOURCE '`station`', NATIVE_TYPE 'VARCHAR'),
+	vehicletype string(8) OPTIONS(NAMEINSOURCE '`vehicletype`', NATIVE_TYPE 'VARCHAR'),
+	paymenttype string(15) OPTIONS(NAMEINSOURCE '`paymenttype`', NATIVE_TYPE 'VARCHAR'),
+	amount integer OPTIONS(NAMEINSOURCE '`amount`', NATIVE_TYPE 'INT', FIXED_LENGTH 'TRUE'),
+	CONSTRAINT NewPrimaryKey PRIMARY KEY(period)
+) OPTIONS(NAMEINSOURCE '`Transport`.`vehicles_flow`', UPDATABLE 'TRUE');
 
 ]]></metadata>
 </model>
-<model name="StockPG" visible="false">
-<source connection-jndi-name="StockPG_DS" name="StockPG" translator-name="postgresql"/>
-<metadata type="DDL"><![CDATA[
-
-CREATE FOREIGN TABLE stock (
-	productid integer OPTIONS(NAMEINSOURCE '"productid"', NATIVE_TYPE 'int4', FIXED_LENGTH 'TRUE'),
-	amount double OPTIONS(NAMEINSOURCE '"amount"', NATIVE_TYPE 'float8', FIXED_LENGTH 'TRUE')
-) OPTIONS(NAMEINSOURCE '"public"."stock"', UPDATABLE 'TRUE');
-
-]]></metadata>
-</model>
-	<model name="Mongo">
-<source connection-jndi-name="java:/mongodb-DS" name="Mongo" translator-name="mongodb"/>
+<model name="Mongo">
+<source connection-jndi-name="java:/datasources/MongoDB" name="Mongo" translator-name="mongodb"/>
 <metadata type="DDL"><![CDATA[
 
 CREATE FOREIGN TABLE customers (
-	customer_id biginteger(4000),
-	firstName string(4000),
-	lastName string(4000)
+	_id object,
+	customer_id integer,
+	firstName string,
+	lastName string,
+	CONSTRAINT PK0 PRIMARY KEY(_id)
 ) OPTIONS(UPDATABLE 'TRUE');
+
+CREATE FOREIGN TABLE key (
+	_id integer,
+	CONSTRAINT PK0 PRIMARY KEY(_id)
+) OPTIONS(UPDATABLE 'TRUE', "teiid_mongo:MERGE" 'system.indexes');
+
+CREATE FOREIGN TABLE system.indexes (
+	v integer,
+	name string,
+	ns string
+) OPTIONS(UPDATABLE 'TRUE');
+
+]]></metadata>
+</model>
+<model name="SQLServer_OCP">
+<source connection-jndi-name="java:/SQLServer" name="SQLServer_OCP" translator-name="sqlserver"/>
+<metadata type="DDL"><![CDATA[
+
+CREATE FOREIGN TABLE MeteorologyInfo (
+	"Date" string(2147483647) OPTIONS(NAMEINSOURCE '"Date"', NATIVE_TYPE 'nvarchar', FIXED_LENGTH 'TRUE'),
+	"Hour" string(2147483647) OPTIONS(NAMEINSOURCE '"Hour"', NATIVE_TYPE 'nvarchar', FIXED_LENGTH 'TRUE'),
+	Station integer OPTIONS(NAMEINSOURCE '"Station"', NATIVE_TYPE 'int', FIXED_LENGTH 'TRUE'),
+	Wind float OPTIONS(NAMEINSOURCE '"Wind"', NATIVE_TYPE 'float', FIXED_LENGTH 'TRUE'),
+	WindDirection float OPTIONS(NAMEINSOURCE '"WindDirection"', NATIVE_TYPE 'float', FIXED_LENGTH 'TRUE'),
+	TEMP_C float OPTIONS(NAMEINSOURCE '"TEMP_C"', NATIVE_TYPE 'float', FIXED_LENGTH 'TRUE'),
+	HR_PORC float OPTIONS(NAMEINSOURCE '"HR_PORC"', NATIVE_TYPE 'float', FIXED_LENGTH 'TRUE'),
+	PRESS_MBAR float OPTIONS(NAMEINSOURCE '"PRESS_MBAR"', NATIVE_TYPE 'float', FIXED_LENGTH 'TRUE'),
+	PLUV_MM float OPTIONS(NAMEINSOURCE '"PLUV_MM"', NATIVE_TYPE 'float', FIXED_LENGTH 'TRUE'),
+	RAD_SOL float OPTIONS(NAMEINSOURCE '"RAD_SOL"', NATIVE_TYPE 'float', FIXED_LENGTH 'TRUE'),
+	UV_UVINDEX float OPTIONS(NAMEINSOURCE '"UV_UVINDEX"', NATIVE_TYPE 'float', FIXED_LENGTH 'TRUE')
+) OPTIONS(NAMEINSOURCE '"MeteorologyDB"."dbo"."MeteorologyInfo"', UPDATABLE 'TRUE', CARDINALITY '60');
+
+]]></metadata>
+</model>
+<model name="Vista1" type="VIRTUAL">
+<property name="imports" value="SQLServer_OCP"/>
+<metadata type="DDL"><![CDATA[
+
+CREATE VIEW MeteorologyInfo (
+	"Date" string(2147483647) OPTIONS(NAMEINSOURCE '"Date"', NATIVE_TYPE 'nvarchar', UPDATABLE 'FALSE', FIXED_LENGTH 'TRUE'),
+	"Hour" string(2147483647) OPTIONS(NAMEINSOURCE '"Hour"', NATIVE_TYPE 'nvarchar', UPDATABLE 'FALSE', FIXED_LENGTH 'TRUE'),
+	Station integer OPTIONS(NAMEINSOURCE '"Station"', NATIVE_TYPE 'int', UPDATABLE 'FALSE', FIXED_LENGTH 'TRUE'),
+	Wind float OPTIONS(NAMEINSOURCE '"Wind"', NATIVE_TYPE 'float', UPDATABLE 'FALSE', FIXED_LENGTH 'TRUE'),
+	WindDirection float OPTIONS(NAMEINSOURCE '"WindDirection"', NATIVE_TYPE 'float', UPDATABLE 'FALSE', FIXED_LENGTH 'TRUE'),
+	TEMP_C float OPTIONS(NAMEINSOURCE '"TEMP_C"', NATIVE_TYPE 'float', UPDATABLE 'FALSE', FIXED_LENGTH 'TRUE'),
+	HR_PORC float OPTIONS(NAMEINSOURCE '"HR_PORC"', NATIVE_TYPE 'float', UPDATABLE 'FALSE', FIXED_LENGTH 'TRUE'),
+	PRESS_MBAR float OPTIONS(NAMEINSOURCE '"PRESS_MBAR"', NATIVE_TYPE 'float', UPDATABLE 'FALSE', FIXED_LENGTH 'TRUE'),
+	PLUV_MM float OPTIONS(NAMEINSOURCE '"PLUV_MM"', NATIVE_TYPE 'float', UPDATABLE 'FALSE', FIXED_LENGTH 'TRUE'),
+	RAD_SOL float OPTIONS(NAMEINSOURCE '"RAD_SOL"', NATIVE_TYPE 'float', UPDATABLE 'FALSE', FIXED_LENGTH 'TRUE'),
+	UV_UVINDEX float OPTIONS(NAMEINSOURCE '"UV_UVINDEX"', NATIVE_TYPE 'float', UPDATABLE 'FALSE', FIXED_LENGTH 'TRUE')
+) OPTIONS(NAMEINSOURCE '"MeteorologyDB"."dbo"."MeteorologyInfo"', CARDINALITY '60') 
+AS
+	SELECT * FROM SQLServer_OCP.MeteorologyInfo;
 
 ]]></metadata>
 </model>
